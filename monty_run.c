@@ -1,7 +1,8 @@
 #include "monty.h"
 #include <string.h>
 #include <stdio.h>
-#include <stdlib.h>
+
+ssize_t getline(char **lineptr, size_t *n, FILE *stream);
 
 void free_tokens(void);
 unsigned int token_arr_len(void);
@@ -115,16 +116,13 @@ int run_monty(FILE *script_fd)
 	stack_t *stack = NULL;
 	char *line = NULL;
 	size_t len = 0, exit_status = EXIT_SUCCESS;
-	ssize_t read;
 	unsigned int line_number = 0, prev_tok_len = 0;
 	void (*op_func)(stack_t**, unsigned int);
 
 	if (init_stack(&stack) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 
-	read = getline(&line, &len, script_fd);
-
-	while (read != -1)
+	while (getline(&line, &len, script_fd) != -1)
 	{
 		line_number++;
 		op_toks = strtow(line, DELIMS);
